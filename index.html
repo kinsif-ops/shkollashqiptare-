@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shkolla Shqiptare – Mëso Shqipen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root {
+    --red:    #C0392B;
+    --black:  #111111;
+    --cream:  #F7F2EA;
+    --gold:   #D4A847;
+    --navy:   #1C2B4A;
+    --white:  #FFFFFF;
+    --muted:  #8A8070;
+    --border: #DDD5C5;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--black);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(247,242,234,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--navy); letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--black); text-decoration: none;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    opacity: 0.7; transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-cta {
+    background: var(--red); color: var(--white) !important;
+    padding: 0.55rem 1.4rem !important; border-radius: 2px;
+    opacity: 1 !important;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 6rem 4rem 6rem 5rem;
+    position: relative; z-index: 2;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 2rem;
+  }
+  .hero-tag::before {
+    content: ''; display: block;
+    width: 2rem; height: 2px; background: var(--red);
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 5vw, 5.5rem);
+    font-weight: 900; line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em { font-style: italic; color: var(--red); display: block; }
+  .hero-subtitle {
+    font-size: 1.1rem; line-height: 1.7;
+    color: var(--muted); max-width: 440px;
+    margin-bottom: 3rem; font-weight: 300;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--red); color: var(--white);
+    padding: 1rem 2.2rem; border: none; border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em;
+    text-transform: uppercase; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { background: #A5281D; transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent; color: var(--navy);
+    padding: 1rem 2.2rem;
+    border: 1.5px solid var(--border); border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em;
+    text-transform: uppercase; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--navy); transform: translateY(-2px); }
+
+  /* HERO RIGHT */
+  .hero-right {
+    position: relative; overflow: hidden;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .alphabet-mosaic {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    width: 100%; height: 100%;
+    position: absolute; inset: 0;
+    opacity: 0.18;
+  }
+  .alpha-cell {
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+    font-weight: 900; color: var(--white);
+    border: 1px solid rgba(255,255,255,0.06);
+    animation: fadeCell 4s ease-in-out infinite alternate;
+  }
+  .alpha-cell:nth-child(odd) { animation-delay: 0.3s; }
+  .alpha-cell:nth-child(3n) { animation-delay: 0.7s; }
+  @keyframes fadeCell { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+  .hero-feature-card {
+    position: relative; z-index: 2;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(4px);
+    border-radius: 4px;
+    padding: 3rem;
+    max-width: 380px; margin: 2rem;
+  }
+  .big-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 9rem; font-weight: 900;
+    color: var(--white); line-height: 1;
+    letter-spacing: -0.05em;
+    margin-bottom: 1rem;
+    display: flex; align-items: baseline; gap: 0.2em;
+  }
+  .big-letter-small { font-size: 5rem; opacity: 0.5; }
+  .letter-words { display: flex; flex-direction: column; gap: 0.5rem; }
+  .letter-word {
+    font-size: 1rem; color: rgba(255,255,255,0.7);
+    font-weight: 300; letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .letter-word::before {
+    content: ''; display: block;
+    width: 1.5rem; height: 1px; background: var(--gold);
+    flex-shrink: 0;
+  }
+  .play-btn {
+    margin-top: 2rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    color: var(--gold); font-size: 0.85rem;
+    font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; cursor: pointer;
+    border: none; background: none; padding: 0;
+  }
+  .play-circle {
+    width: 42px; height: 42px;
+    border: 1.5px solid var(--gold); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .play-btn:hover .play-circle { background: rgba(212,168,71,0.15); }
+  .play-circle svg { margin-left: 3px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--navy);
+    padding: 2rem 5rem;
+    display: flex; gap: 4rem; align-items: center;
+  }
+  .stat { display: flex; flex-direction: column; gap: 0.2rem; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 700;
+    color: var(--gold); line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.8rem; color: rgba(255,255,255,0.5);
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .stat-divider { width: 1px; height: 3rem; background: rgba(255,255,255,0.12); }
+
+  /* SECTION SHARED */
+  .section { padding: 7rem 5rem; }
+  .section-tag {
+    font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-tag::before {
+    content: ''; display: block;
+    width: 1.5rem; height: 2px; background: var(--red);
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    font-weight: 700; line-height: 1.1;
+    letter-spacing: -0.02em; color: var(--navy);
+    margin-bottom: 1.5rem;
+  }
+  .section-lead {
+    font-size: 1.05rem; line-height: 1.75;
+    color: var(--muted); max-width: 580px; font-weight: 300;
+  }
+
+  /* NIVÅ */
+  .niva-section { background: var(--white); padding: 7rem 5rem; }
+  .niva-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 4rem; border: 2px solid var(--border);
+  }
+  .niva-card {
+    padding: 3rem 2.5rem;
+    background: var(--white);
+    border-right: 2px solid var(--border);
+    position: relative; overflow: hidden; transition: background 0.3s;
+  }
+  .niva-card:last-child { border-right: none; }
+  .niva-card:hover { background: var(--cream); }
+  .niva-card.active { background: var(--navy); }
+  .niva-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 900; line-height: 1;
+    color: var(--border);
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    transition: color 0.3s;
+  }
+  .niva-card.active .niva-num { color: rgba(255,255,255,0.08); }
+  .niva-badge {
+    display: inline-block; font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 500;
+    padding: 0.3rem 0.8rem; border-radius: 2px; margin-bottom: 1.5rem;
+  }
+  .badge-active { background: var(--red); color: var(--white); }
+  .badge-coming { background: var(--border); color: var(--muted); }
+  .niva-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 0.75rem; line-height: 1.2;
+  }
+  .niva-card.active .niva-title { color: var(--white); }
+  .niva-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.65; margin-bottom: 2rem; }
+  .niva-card.active .niva-desc { color: rgba(255,255,255,0.55); }
+  .niva-items { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .niva-items li {
+    font-size: 0.85rem; color: var(--muted);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .niva-card.active .niva-items li { color: rgba(255,255,255,0.6); }
+  .niva-items li::before {
+    content: ''; display: block;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--gold); flex-shrink: 0;
+  }
+  .niva-link {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: 2.5rem; font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--red); text-decoration: none; transition: gap 0.2s;
+  }
+  .niva-link:hover { gap: 0.9rem; }
+  .niva-card.active .niva-link { color: var(--gold); }
+
+  /* ALFABETI */
+  .alfabeti-section { padding: 7rem 5rem; background: var(--cream); }
+  .alfabeti-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; margin-bottom: 4rem; align-items: end;
+  }
+  .alfabeti-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+  }
+  .letter-tile {
+    aspect-ratio: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .letter-tile::after {
+    content: ''; position: absolute;
+    inset: 0; background: var(--navy);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .letter-tile:hover::after { opacity: 1; }
+  .letter-tile.digraph { background: var(--cream); }
+  .tile-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700;
+    color: var(--navy); line-height: 1;
+    position: relative; z-index: 1; transition: color 0.2s;
+  }
+  .letter-tile:hover .tile-letter { color: var(--white); }
+  .tile-sub {
+    font-size: 0.6rem; color: var(--muted);
+    letter-spacing: 0.04em; text-transform: uppercase;
+    margin-top: 0.2rem; position: relative; z-index: 1; transition: color 0.2s;
+  }
+  .letter-tile:hover .tile-sub { color: rgba(255,255,255,0.5); }
+
+  /* HOW IT WORKS */
+  .how-section { background: var(--navy); padding: 7rem 5rem; color: var(--white); }
+  .how-section .section-title { color: var(--white); }
+  .how-section .section-lead { color: rgba(255,255,255,0.5); }
+  .how-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 4rem; }
+  .how-step { padding: 2.5rem; border: 1px solid rgba(255,255,255,0.08); position: relative; }
+  .step-num { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 1.5rem; }
+  .step-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 0.75rem; line-height: 1.3; }
+  .step-desc { font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
+
+  /* ── SCHOOLS MAP SECTION ── */
+  .schools-section {
+    padding: 7rem 5rem;
+    background: var(--white);
+  }
+  .schools-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; margin-bottom: 4rem; align-items: end;
+  }
+  .schools-cta-box {
+    background: var(--navy);
+    padding: 2.5rem;
+    border-radius: 2px;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .schools-cta-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--white); line-height: 1.2;
+  }
+  .schools-cta-box p {
+    font-size: 0.9rem; color: rgba(255,255,255,0.55);
+    line-height: 1.65;
+  }
+  .schools-cta-box .btn-primary {
+    align-self: flex-start; margin-top: 0.5rem;
+  }
+
+  #schoolMap {
+    width: 100%; height: 480px;
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    margin-bottom: 3rem;
+  }
+
+  .school-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .school-card {
+    border: 1.5px solid var(--border);
+    background: var(--cream);
+    padding: 0;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .school-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+  .school-card-header {
+    background: var(--navy);
+    padding: 1.5rem 2rem;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .school-card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.25rem;
+  }
+  .school-card-city {
+    font-size: 0.8rem; color: rgba(255,255,255,0.5);
+    letter-spacing: 0.04em;
+  }
+  .school-dot {
+    width: 10px; height: 10px;
+    background: var(--gold); border-radius: 50%;
+    flex-shrink: 0; margin-top: 6px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+  }
+  .school-card-body { padding: 1.5rem 2rem; }
+  .school-info-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .school-info-row:last-of-type { border-bottom: none; }
+  .school-info-label { color: var(--muted); }
+  .school-info-val { color: var(--navy); font-weight: 500; }
+  .school-card-footer {
+    padding: 1rem 2rem;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 0.75rem;
+  }
+  .school-btn-enroll {
+    flex: 1;
+    background: var(--red); color: var(--white);
+    border: none; padding: 0.65rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.2s;
+    text-decoration: none; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .school-btn-enroll:hover { background: #A5281D; }
+  .school-btn-map {
+    background: transparent; color: var(--navy);
+    border: 1.5px solid var(--border); padding: 0.65rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .school-btn-map:hover { border-color: var(--navy); }
+
+  /* SIGNUP MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.6);
+    align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    max-width: 520px; width: 100%;
+    position: relative;
+    animation: slideUp 0.3s ease;
+  }
+  .modal-header {
+    background: var(--navy);
+    padding: 2rem 2.5rem;
+  }
+  .modal-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.25rem;
+  }
+  .modal-header p { font-size: 0.88rem; color: rgba(255,255,255,0.5); }
+  .modal-school-name {
+    color: var(--gold) !important;
+    font-weight: 500;
+  }
+  .modal-body { padding: 2rem 2.5rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label {
+    display: block; font-size: 0.78rem;
+    font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .form-group input, .form-group select {
+    width: 100%; padding: 0.75rem 1rem;
+    border: 1.5px solid var(--border);
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; color: var(--black);
+    outline: none; transition: border-color 0.2s;
+    appearance: none;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--navy);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .modal-footer {
+    padding: 1.25rem 2.5rem;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 1rem; align-items: center;
+  }
+  .modal-close {
+    position: absolute; top: 1.25rem; right: 1.25rem;
+    background: rgba(255,255,255,0.15); border: none;
+    color: var(--white); width: 32px; height: 32px;
+    border-radius: 50%; cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.25); }
+  .form-note { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+  /* SUCCESS STATE */
+  .success-state {
+    display: none;
+    padding: 3rem 2.5rem;
+    text-align: center;
+  }
+  .success-icon {
+    font-size: 3rem; margin-bottom: 1rem;
+  }
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 0.75rem;
+  }
+  .success-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+
+  /* DOWNLOAD */
+  .download-section { padding: 7rem 5rem; background: var(--cream); }
+  .download-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
+  .download-card {
+    background: var(--white); border: 1.5px solid var(--border);
+    padding: 2rem; display: flex; flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .download-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+  .dl-type { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); font-weight: 500; margin-bottom: 1rem; }
+  .dl-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+  .dl-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; flex: 1; margin-bottom: 1.5rem; }
+  .dl-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: var(--navy); color: var(--white);
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; cursor: pointer;
+    border: none; width: 100%; transition: background 0.2s;
+  }
+  .dl-btn:hover { background: var(--red); }
+  .dl-badge-coming {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0.75rem 1rem;
+    background: var(--border); color: var(--muted);
+    font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* CONTRIBUTE */
+  .contrib-section {
+    padding: 7rem 5rem; background: var(--white);
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+  }
+  .contrib-card { background: var(--cream); border: 1.5px solid var(--border); padding: 2.5rem; }
+  .contrib-card-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--navy); margin-bottom: 1.5rem; }
+  .contrib-list { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; }
+  .contrib-list li { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+  .contrib-icon { width: 24px; height: 24px; border-radius: 2px; background: var(--navy); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--white); margin-top: 0.05rem; }
+
+  /* FOOTER */
+  footer { background: var(--black); padding: 4rem 5rem; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--white); margin-bottom: 1rem; }
+  .footer-brand span { color: var(--red); }
+  .footer-tagline { font-size: 0.88rem; color: rgba(255,255,255,0.35); line-height: 1.65; max-width: 300px; }
+  .footer-col-title { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 1.5rem; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .footer-links a { font-size: 0.88rem; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+  .footer-bottom { background: var(--black); border-top: 1px solid rgba(255,255,255,0.06); padding: 1.5rem 5rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.2); letter-spacing: 0.04em; }
+  .cc-badge { font-size: 0.75rem; color: rgba(255,255,255,0.2); font-family: 'DM Mono', monospace; }
+
+  /* LEAFLET POPUP CUSTOM */
+  .school-popup { font-family: 'DM Sans', sans-serif; min-width: 230px; }
+  .popup-header { background: var(--navy); color: #fff; padding: 14px 16px; margin: -14px -20px 14px; border-radius: 4px 4px 0 0; }
+  .popup-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin: 0 0 3px; }
+  .popup-city { font-size: 0.75rem; opacity: 0.6; margin: 0; }
+  .popup-row { display: flex; align-items: flex-start; gap: 8px; font-size: 0.82rem; margin: 5px 0; }
+  .popup-label { color: #999; min-width: 72px; }
+  .popup-enroll-btn {
+    display: block; width: 100%; margin-top: 12px;
+    background: var(--red); color: #fff;
+    border: none; padding: 8px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .popup-enroll-btn:hover { background: #A5281D; }
+  .leaflet-popup-content-wrapper { border-radius: 4px !important; padding: 0 !important; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important; }
+  .leaflet-popup-content { margin: 14px 20px 16px !important; }
+
+  /* ANIMATIONS */
+  @keyframes slideUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-tag    { animation: slideUp 0.6s ease 0.1s both; }
+  .hero-title  { animation: slideUp 0.6s ease 0.2s both; }
+  .hero-subtitle { animation: slideUp 0.6s ease 0.35s both; }
+  .hero-actions  { animation: slideUp 0.6s ease 0.5s both; }
+  .hero-feature-card { animation: slideUp 0.8s ease 0.4s both; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 5rem 1.5rem 3rem; }
+    .hero-right { min-height: 50vh; }
+    .stats-bar { padding: 2rem 1.5rem; gap: 2rem; flex-wrap: wrap; }
+    .section, .niva-section, .alfabeti-section, .how-section,
+    .schools-section, .download-section, .contrib-section { padding: 4rem 1.5rem; }
+    .niva-grid, .how-steps, .download-grid { grid-template-columns: 1fr; }
+    .niva-card { border-right: none; border-bottom: 2px solid var(--border); }
+    .contrib-section { grid-template-columns: 1fr; gap: 3rem; }
+    .alfabeti-header, .schools-header { grid-template-columns: 1fr; gap: 2rem; }
+    footer { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem; }
+    .footer-bottom { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .school-cards-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Shkolla<span>Shqiptare</span>.com</div>
+  <ul class="nav-links">
+    <li><a href="#niva">Nivelet</a></li>
+    <li><a href="#alfabeti">Alfabeti</a></li>
+    <li><a href="#shkollat">Shkollat</a></li>
+    <li><a href="#shkarko">Shkarko</a></li>
+    <li><a href="#shkollat" class="nav-cta">Regjistro fëmijën</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Për diasporën shqiptare në Norvegji</div>
+    <h1 class="hero-title">
+      Mëso<br>
+      <em>Shqipen</em>
+    </h1>
+    <p class="hero-subtitle">
+      Materiale falas për fëmijët shqiptarë 6–9 vjeç. Shkarkoni dhe printoni direkt — pa regjistrim, pa pagesë, gjithmonë.
+    </p>
+    <div class="hero-actions">
+      <a href="#shkollat" class="btn-primary">Gjej shkollën tënde</a>
+      <a href="#shkarko" class="btn-secondary">Shiko materialet</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="alphabet-mosaic">
+      <div class="alpha-cell">A</div><div class="alpha-cell">B</div><div class="alpha-cell">C</div>
+      <div class="alpha-cell">Ç</div><div class="alpha-cell">D</div><div class="alpha-cell">Dh</div>
+      <div class="alpha-cell">E</div><div class="alpha-cell">Ë</div><div class="alpha-cell">F</div>
+      <div class="alpha-cell">G</div><div class="alpha-cell">Gj</div><div class="alpha-cell">H</div>
+      <div class="alpha-cell">I</div><div class="alpha-cell">J</div><div class="alpha-cell">K</div>
+      <div class="alpha-cell">L</div><div class="alpha-cell">Ll</div><div class="alpha-cell">M</div>
+      <div class="alpha-cell">N</div><div class="alpha-cell">Nj</div><div class="alpha-cell">O</div>
+      <div class="alpha-cell">P</div><div class="alpha-cell">Q</div><div class="alpha-cell">R</div>
+      <div class="alpha-cell">Rr</div><div class="alpha-cell">S</div><div class="alpha-cell">Sh</div>
+      <div class="alpha-cell">T</div><div class="alpha-cell">Th</div><div class="alpha-cell">U</div>
+      <div class="alpha-cell">V</div><div class="alpha-cell">X</div><div class="alpha-cell">Xh</div>
+      <div class="alpha-cell">Y</div><div class="alpha-cell">Z</div><div class="alpha-cell">Zh</div>
+    </div>
+    <div class="hero-feature-card">
+      <div class="big-letter">A <span class="big-letter-small">a</span></div>
+      <div class="letter-words">
+        <div class="letter-word">ariu &nbsp;— bjørnen</div>
+        <div class="letter-word">anija &nbsp;— skipet</div>
+        <div class="letter-word">arrati &nbsp;— flukten</div>
+      </div>
+      <button class="play-btn" onclick="playLetter()">
+        <div class="play-circle">
+          <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
+            <path d="M1 1L11 7L1 13V1Z" fill="#D4A847"/>
+          </svg>
+        </div>
+        Dëgjo shqiptimin
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num">36</div>
+    <div class="stat-label">Shkronja / Bokstaver</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num">2</div>
+    <div class="stat-label">Shkolla / Skoler</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num">65</div>
+    <div class="stat-label">Nxënës / Elever</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Falas / Gratis</div>
+  </div>
+</div>
+
+<!-- NIVELET -->
+<section class="niva-section" id="niva">
+  <div class="section-tag">Programi mësimor</div>
+  <h2 class="section-title">Tre nivele,<br>një rrugëtim</h2>
+  <div class="niva-grid">
+    <div class="niva-card active">
+      <div class="niva-num">1</div>
+      <div class="niva-badge badge-active">Aktiv tani</div>
+      <div class="niva-title">Alfabeti</div>
+      <div class="niva-desc">36 shkronjat e gjuhës shqipe, me udhëzues shkrimi, flashkarta dhe klipe audio për çdo shkronjë.</div>
+      <ul class="niva-items">
+        <li>Fletë pune të printueshme</li>
+        <li>Flashkarta për klasë</li>
+        <li>Klipe audio – shqiptim</li>
+        <li>Udhëzues për mësuesin</li>
+        <li>Aktivitete për prindërit</li>
+      </ul>
+      <a href="#shkarko" class="niva-link">Shkarko tani →</a>
+    </div>
+    <div class="niva-card">
+      <div class="niva-num">2</div>
+      <div class="niva-badge badge-coming">Së shpejti</div>
+      <div class="niva-title">Fjalori bazë</div>
+      <div class="niva-desc">Fjalët e para: ngjyrat, numrat, kafshët, familja. Me ilustrime dhe aktivitete ndërvepruese.</div>
+      <ul class="niva-items">
+        <li>Kartela fjalori me figura</li>
+        <li>Lojëra fjalësh</li>
+        <li>Këngë dhe ritme</li>
+        <li>Fletë pune tematike</li>
+      </ul>
+      <a href="#kontribuo" class="niva-link">Kontribuo →</a>
+    </div>
+    <div class="niva-card">
+      <div class="niva-num">3</div>
+      <div class="niva-badge badge-coming">Planifikuar</div>
+      <div class="niva-title">Fjalitë e para</div>
+      <div class="niva-desc">Ndërtimi i fjalive të thjeshta. Dialogë të përditshëm dhe histori të shkurtra për lexim.</div>
+      <ul class="niva-items">
+        <li>Histori të shkurtra</li>
+        <li>Dialogë për role-play</li>
+        <li>Fletë pune gramatikore</li>
+        <li>Mini-libra të printueshëm</li>
+      </ul>
+      <a href="#kontribuo" class="niva-link">Kontribuo →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ALFABETI -->
+<section class="alfabeti-section" id="alfabeti">
+  <div class="alfabeti-header">
+    <div>
+      <div class="section-tag">Niveli 1</div>
+      <h2 class="section-title">36 shkronjat shqipe</h2>
+    </div>
+    <p class="section-lead">
+      Gjuha shqipe ka 36 shkronja, duke përfshirë 9 digrafe. Çdo shkronjë ka material të plotë për t'u shkarkuar.
+    </p>
+  </div>
+  <div class="alfabeti-grid" id="alfabetiGrid"></div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="si-funksionon">
+  <div class="section-tag" style="color:var(--gold)">Si funksionon</div>
+  <h2 class="section-title">Nga shkolla te shtëpia</h2>
+  <p class="section-lead">Materialet janë krijuar që të funksionojnë në çdo kontekst — klasë, shtëpi, apo grup mësimor.</p>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🗺️</div>
+      <div class="step-title">Gjej shkollën</div>
+      <div class="step-desc">Shiko hartën dhe gjej shkollën shqiptare më të afërt. Klikoni mbi pikë për informacion të plotë.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">02</div>
+      <div class="step-icon">📝</div>
+      <div class="step-title">Regjistro fëmijën</div>
+      <div class="step-desc">Plotësoni formularin e thjeshtë të regjistrimit. Shkolla do t'ju kontaktojë brenda 2–3 ditësh.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">03</div>
+      <div class="step-icon">🎓</div>
+      <div class="step-title">Mëson në klasë</div>
+      <div class="step-desc">Çdo material vjen me udhëzues për mësuesin dhe aktivitete për 20–30 minuta mësim.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">04</div>
+      <div class="step-icon">🏠</div>
+      <div class="step-title">Vazhdon në shtëpi</div>
+      <div class="step-desc">Udhëzimet për prindërit e bëjnë të lehtë vazhdimin e mësimit edhe jashtë klasës.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHOOLS MAP SECTION -->
+<section class="schools-section" id="shkollat">
+  <div class="schools-header">
+    <div>
+      <div class="section-tag">Shkollat tona</div>
+      <h2 class="section-title">Gjej shkollën<br>më pranë teje</h2>
+      <p class="section-lead">Klikoni mbi një pikë në hartë ose zgjidhni një shkollë më poshtë për të parë informacionin e plotë dhe për t'u regjistruar.</p>
+    </div>
+    <div class="schools-cta-box">
+      <h3>A keni një shkollë shqiptare në qytetin tuaj?</h3>
+      <p>Ne jemi duke zgjeruar rrjetin tonë në të gjithë Norvegjinë. Regjistroni shkollën tuaj dhe merrni akses në të gjitha materialet falas.</p>
+      <a href="#kontribuo" class="btn-primary">Regjistro shkollën tënde</a>
+    </div>
+  </div>
+
+  <div id="schoolMap"></div>
+
+  <div class="school-cards-grid" id="schoolCards"></div>
+</section>
+
+<!-- DOWNLOAD -->
+<section class="download-section" id="shkarko">
+  <div class="section-tag">Niveli 1 – Alfabeti</div>
+  <h2 class="section-title">Shkarko materialet</h2>
+  <p class="section-lead">Të gjitha materialet janë falas dhe të gatshme për printim. Nuk nevojitet regjistrim.</p>
+  <div class="download-grid">
+    <div class="download-card">
+      <div class="dl-type">PDF · Printim</div>
+      <div class="dl-title">Fletë pune – Shkronja A</div>
+      <div class="dl-desc">Udhëzues shkrimi me shigjeta, rreshta ushtrimi dhe 3 fjalë shembull me vizatime. A4, gati për printim.</div>
+      <a href="pdf/fleta-pune-a.pdf" download class="dl-btn">Shkarko PDF <span>↓</span></a>
+    </div>
+    <div class="download-card">
+      <div class="dl-type">PDF · Printim</div>
+      <div class="dl-title">Fletë pune – Shkronja B</div>
+      <div class="dl-desc">Udhëzues shkrimi me shigjeta, rreshta ushtrimi dhe 3 fjalë shembull me vizatime. A4, gati për printim.</div>
+      <a href="pdf/fleta-pune-b.pdf" download class="dl-btn">Shkarko PDF <span>↓</span></a>
+    </div>
+    <div class="download-card">
+      <div class="dl-type">PDF · Printim</div>
+      <div class="dl-title">Flashkarta – Alfabeti i plotë</div>
+      <div class="dl-desc">36 flashkarta me shkronjat e mëdha dhe të vogla. Priten dhe përdoren në klasë ose në shtëpi.</div>
+      <a href="pdf/flashkarta-alfabeti.pdf" download class="dl-btn">Shkarko PDF <span>↓</span></a>
+    </div>
+    <div class="download-card">
+      <div class="dl-type">PDF · Mësues</div>
+      <div class="dl-title">Udhëzues mësuesi – A & B</div>
+      <div class="dl-desc">Plan i detajuar mësimor, aktivitete dhe këshilla për kontekstin e diasporës.</div>
+      <a href="pdf/udh-mesues-ab.pdf" download class="dl-btn">Shkarko PDF <span>↓</span></a>
+    </div>
+    <div class="download-card">
+      <div class="dl-type">Poster · Printim</div>
+      <div class="dl-title">Poster – Alfabeti shqip</div>
+      <div class="dl-desc">Poster A2 me të gjitha 36 shkronjat, ideal për varje në klasë. Grafikë e qartë dhe e bukur.</div>
+      <div class="dl-badge-coming">Së shpejti</div>
+    </div>
+    <div class="download-card" style="background: var(--navy); border-color: var(--navy);">
+      <div class="dl-type" style="color:var(--gold)">Paketa e plotë</div>
+      <div class="dl-title" style="color:var(--white)">Të gjitha materialet</div>
+      <div class="dl-desc" style="color:rgba(255,255,255,0.45)">Gjithçka në një ZIP: fletë pune A & B, flashkarta, udhëzues dhe klipe audio.</div>
+      <a href="pdf/paketa-e-plote.zip" download class="dl-btn" style="background:var(--red)">Shkarko gjithçka (ZIP) <span>↓</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRIBUTE -->
+<section class="contrib-section" id="kontribuo">
+  <div>
+    <div class="section-tag">Kontribuo</div>
+    <h2 class="section-title">Ndërto sëbashku me ne</h2>
+    <p class="section-lead" style="margin-bottom:2rem">
+      Platforma rritet falë kontribuesve — mësues, prindër, artistë dhe entuziastë të gjuhës shqipe. Çdo material kalon nëpër rishikim editorial para publikimit.
+    </p>
+    <a href="mailto:kontakt@shkollashqiptare.com" class="btn-primary">Bëhu kontribues</a>
+  </div>
+  <div class="contrib-card">
+    <div class="contrib-card-title">Si të kontribuosh</div>
+    <ul class="contrib-list">
+      <li>
+        <div class="contrib-icon">1</div>
+        <span>Shkarko manuali i kontribuesit dhe lexo udhëzimet e plota.</span>
+      </li>
+      <li>
+        <div class="contrib-icon">2</div>
+        <span>Krijo materialet sipas shabllonit: fletë pune, flashkarta, klip audio dhe udhëzues mësuesi.</span>
+      </li>
+      <li>
+        <div class="contrib-icon">3</div>
+        <span>Dërgo skedaret me emërtim standard — p.sh. <code style="font-family:'DM Mono';font-size:0.8em;background:var(--border);padding:0.1em 0.3em;">bk_a_fleteepunes.pdf</code></span>
+      </li>
+      <li>
+        <div class="contrib-icon">4</div>
+        <span>Redaktori shqyrton brenda 7 ditësh. Materialet e miratuara publikohen me emrin tënd.</span>
+      </li>
+    </ul>
+    <div style="margin-top:2rem">
+      <a href="#" class="btn-secondary" style="font-size:0.82rem">Shkarko manuali i kontribuesit →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="kontakt">
+  <div>
+    <div class="footer-brand">Shkolla<span>Shqiptare</span>.com</div>
+    <p class="footer-tagline">Materiale falas për fëmijët shqiptarë në diasporë. Ndërtuar me dashuri nga komuniteti, për komunitetin.</p>
+    <p style="margin-top:1.5rem;font-size:0.8rem;color:rgba(255,255,255,0.2)">📧 kontakt@shkollashqiptare.com</p>
+  </div>
+  <div>
+    <div class="footer-col-title">Platforma</div>
+    <ul class="footer-links">
+      <li><a href="#niva">Nivelet</a></li>
+      <li><a href="#alfabeti">Alfabeti</a></li>
+      <li><a href="#shkollat">Shkollat</a></li>
+      <li><a href="#shkarko">Shkarko</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Komunitet</div>
+    <ul class="footer-links">
+      <li><a href="#kontribuo">Kontribuo</a></li>
+      <li><a href="#shkollat">Regjistro fëmijën</a></li>
+      <li><a href="#">Manuali i kontribuesit</a></li>
+      <li><a href="mailto:kontakt@shkollashqiptare.com">Na kontaktoni</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2025 shkollashqiptare.com — Falas për të gjithë</span>
+  <span class="cc-badge">CC BY 4.0 — Licencë e hapur</span>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <h2>Regjistro fëmijën</h2>
+      <p>Shkolla: <span class="modal-school-name" id="modalSchoolName">—</span></p>
+    </div>
+    <div id="modalFormWrap">
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Emri i fëmijës</label>
+            <input type="text" placeholder="p.sh. Arta" id="childName">
+          </div>
+          <div class="form-group">
+            <label>Mbiemri</label>
+            <input type="text" placeholder="p.sh. Hoxha" id="childSurname">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mosha e fëmijës</label>
+          <select id="childAge">
+            <option value="">Zgjidhni moshën...</option>
+            <option>6 vjeç</option>
+            <option>7 vjeç</option>
+            <option>8 vjeç</option>
+            <option>9 vjeç</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Emri i prindit / kujdestarit</label>
+          <input type="text" placeholder="Emri juaj i plotë" id="parentName">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="emri@email.com" id="parentEmail">
+        </div>
+        <div class="form-group">
+          <label>Numri i telefonit</label>
+          <input type="tel" placeholder="+47 000 00 000" id="parentPhone">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="submitForm()" style="flex:1">Dërgo kërkesën</button>
+        <p class="form-note">Shkolla do t'ju kontaktojë brenda 2–3 ditësh pune.</p>
+      </div>
+    </div>
+    <div class="success-state" id="successState">
+      <div class="success-icon">✅</div>
+      <div class="success-title">Kërkesa u dërgua!</div>
+      <p class="success-desc">Faleminderit! Shkolla <strong id="successSchoolName"></strong> do t'ju kontaktojë së shpejti në emailin që dhatë.</p>
+      <button class="btn-secondary" onclick="closeModal()" style="margin-top:1.5rem">Mbyll</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── SCHOOL DATA ──
+  const schools = [
+    {
+      id: 'a',
+      name: 'Eksempelskole A',
+      city: 'Kristiansand, Norvegjia',
+      lat: 58.1467,
+      lng: 7.9956,
+      elever: 24,
+      laerer: '3 mësues vullnetarë',
+      grunnlagt: 2019,
+      kontakt: 'kontakt@eksempelskole-a.no',
+      ores: 'E shtunë 10:00–12:00',
+      adresse: 'Eksempelgata 1, Kristiansand'
+    },
+    {
+      id: 'b',
+      name: 'Eksempelskole B',
+      city: 'Oslo, Norvegjia',
+      lat: 59.9139,
+      lng: 10.7522,
+      elever: 41,
+      laerer: '5 mësues vullnetarë',
+      grunnlagt: 2015,
+      kontakt: 'kontakt@eksempelskole-b.no',
+      ores: 'E diel 11:00–13:00',
+      adresse: 'Eksempelveien 12, Oslo'
+    }
+  ];
+
+  // ── MAP ──
+  const map = L.map('schoolMap', { center: [61.5, 9], zoom: 5 });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors © CARTO', maxZoom: 18
+  }).addTo(map);
+
+  const dotIcon = (active) => L.divIcon({
+    className: '',
+    html: `<div style="width:18px;height:18px;background:#C0392B;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.25);cursor:pointer;transition:transform 0.2s;"></div>`,
+    iconSize: [18, 18], iconAnchor: [9, 9], popupAnchor: [0, -12]
+  });
+
+  schools.forEach(s => {
+    const marker = L.marker([s.lat, s.lng], { icon: dotIcon() }).addTo(map);
+    const popupHtml = `
+      <div class="school-popup">
+        <div class="popup-header">
+          <p class="popup-name">${s.name}</p>
+          <p class="popup-city">${s.city}</p>
+        </div>
+        <div class="popup-row"><span class="popup-label">Nxënës</span><strong>${s.elever} fëmijë</strong></div>
+        <div class="popup-row"><span class="popup-label">Mësues</span><span>${s.laerer}</span></div>
+        <div class="popup-row"><span class="popup-label">Orari</span><span>${s.ores}</span></div>
+        <div class="popup-row"><span class="popup-label">Adresa</span><span>${s.adresse}</span></div>
+        <div class="popup-row"><span class="popup-label">Kontakt</span><a href="mailto:${s.kontakt}" style="color:#C0392B;font-size:0.78rem;">${s.kontakt}</a></div>
+        <button class="popup-enroll-btn" onclick="openModal('${s.id}')">Regjistro fëmijën →</button>
+      </div>`;
+    marker.bindPopup(popupHtml, { maxWidth: 290 });
+    marker.on('mouseover', function() { this.openPopup(); });
+  });
+
+  // ── SCHOOL CARDS ──
+  const cardContainer = document.getElementById('schoolCards');
+  schools.forEach(s => {
+    cardContainer.innerHTML += `
+      <div class="school-card" onclick="scrollToSchool(${s.lat}, ${s.lng})">
+        <div class="school-card-header">
+          <div>
+            <div class="school-card-name">${s.name}</div>
+            <div class="school-card-city">${s.city}</div>
+          </div>
+          <div class="school-dot"></div>
+        </div>
+        <div class="school-card-body">
+          <div class="school-info-row">
+            <span class="school-info-label">Nxënës</span>
+            <span class="school-info-val">${s.elever} fëmijë</span>
+          </div>
+          <div class="school-info-row">
+            <span class="school-info-label">Mësues</span>
+            <span class="school-info-val">${s.laerer}</span>
+          </div>
+          <div class="school-info-row">
+            <span class="school-info-label">Orari</span>
+            <span class="school-info-val">${s.ores}</span>
+          </div>
+          <div class="school-info-row">
+            <span class="school-info-label">Grunnlagt</span>
+            <span class="school-info-val">${s.grunnlagt}</span>
+          </div>
+          <div class="school-info-row">
+            <span class="school-info-label">Kontakt</span>
+            <a href="mailto:${s.kontakt}" style="color:var(--red);font-size:0.82rem;" onclick="event.stopPropagation()">${s.kontakt}</a>
+          </div>
+        </div>
+        <div class="school-card-footer">
+          <button class="school-btn-enroll" onclick="event.stopPropagation(); openModal('${s.id}')">Regjistro fëmijën</button>
+          <button class="school-btn-map" onclick="event.stopPropagation(); scrollToSchool(${s.lat}, ${s.lng})">Shiko hartën</button>
+        </div>
+      </div>`;
+  });
+
+  function scrollToSchool(lat, lng) {
+    document.getElementById('schoolMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => { map.setView([lat, lng], 12); }, 400);
+  }
+
+  // ── MODAL ──
+  let currentSchool = null;
+  function openModal(schoolId) {
+    currentSchool = schools.find(s => s.id === schoolId);
+    document.getElementById('modalSchoolName').textContent = currentSchool.name;
+    document.getElementById('modalFormWrap').style.display = 'block';
+    document.getElementById('successState').style.display = 'none';
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  function submitForm() {
+    const name = document.getElementById('childName').value.trim();
+    const email = document.getElementById('parentEmail').value.trim();
+    if (!name || !email) {
+      alert('Ju lutem plotësoni të paktën emrin e fëmijës dhe emailin tuaj.');
+      return;
+    }
+    document.getElementById('modalFormWrap').style.display = 'none';
+    document.getElementById('successSchoolName').textContent = currentSchool.name;
+    document.getElementById('successState').style.display = 'block';
+  }
+
+  // ── ALPHABET GRID ──
+  const letters = [
+    {l:'A',d:false},{l:'B',d:false},{l:'C',d:false},{l:'Ç',d:false},
+    {l:'D',d:false},{l:'Dh',d:true},{l:'E',d:false},{l:'Ë',d:false},
+    {l:'F',d:false},{l:'G',d:false},{l:'Gj',d:true},{l:'H',d:false},
+    {l:'I',d:false},{l:'J',d:false},{l:'K',d:false},{l:'L',d:false},
+    {l:'Ll',d:true},{l:'M',d:false},{l:'N',d:false},{l:'Nj',d:true},
+    {l:'O',d:false},{l:'P',d:false},{l:'Q',d:false},{l:'R',d:false},
+    {l:'Rr',d:true},{l:'S',d:false},{l:'Sh',d:true},{l:'T',d:false},
+    {l:'Th',d:true},{l:'U',d:false},{l:'V',d:false},{l:'X',d:false},
+    {l:'Xh',d:true},{l:'Y',d:false},{l:'Z',d:false},{l:'Zh',d:true}
+  ];
+  const grid = document.getElementById('alfabetiGrid');
+  letters.forEach(({l, d}) => {
+    const tile = document.createElement('div');
+    tile.className = 'letter-tile' + (d ? ' digraph' : '');
+    tile.innerHTML = `<div class="tile-letter">${l}</div><div class="tile-sub">${d ? 'digraf' : ''}</div>`;
+    grid.appendChild(tile);
+  });
+
+  // ── AUDIO PLAYBACK ──
+  function playLetter() {
+    const audio = new Audio('audio/a.mp3');
+    audio.play().catch(() => {});
+    const btn = document.querySelector('.play-btn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<div class="play-circle" style="border-color:var(--gold);background:rgba(212,168,71,0.2)">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+        <rect x="1" y="1" width="3" height="8" fill="#D4A847"/>
+        <rect x="6" y="1" width="3" height="8" fill="#D4A847"/>
+      </svg>
+    </div> Duke luajtur...`;
+    setTimeout(() => { btn.innerHTML = orig; }, 2500);
+  }
+
+  // ── SMOOTH SCROLL ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
