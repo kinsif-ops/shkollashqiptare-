@@ -1639,7 +1639,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
     // ── SCHOOL CARDS ──
-  const cardContainer = document.getElementById('schoolCards');
+  cardContainer = document.getElementById('schoolCards');
   schools.forEach((s, idx) => {
     const collapsed = idx >= 6 ? 'collapsed' : '';
     cardContainer.innerHTML += `
@@ -1682,8 +1682,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
   // ── POPULATE COUNTRY FILTER ──
-  const countries = [...new Set(schools.map(s => s.country))].sort();
-  const countrySelect = document.getElementById('countryFilter');
+  countries = [...new Set(schools.map(s => s.country))].sort();
+  countrySelect = document.getElementById('countryFilter');
   countries.forEach(c => {
     const opt = document.createElement('option');
     opt.value = c; opt.textContent = c;
