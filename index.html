@@ -108,6 +108,34 @@
   .niva-link:hover { gap: 0.9rem; }
   .niva-card.active .niva-link { color: var(--gold); }
 
+  /* Coming soon overlay for niva cards */
+  .niva-card.coming {
+    position: relative;
+  }
+  .niva-card.coming .niva-items {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .niva-coming-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(212,168,71,0.12);
+    border: 1px solid rgba(212,168,71,0.3);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    margin-bottom: 1.25rem;
+  }
+  .niva-card.active .niva-coming-banner {
+    background: rgba(212,168,71,0.15);
+    border-color: rgba(212,168,71,0.4);
+  }
+
   /* ALFABETI */
   .alfabeti-section { padding: 7rem 5rem; background: var(--cream); }
   .alfabeti-header { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-bottom: 4rem; align-items: end; }
@@ -387,10 +415,11 @@
       </ul>
       <a href="#shkarko" class="niva-link">Shkarko tani →</a>
     </div>
-    <div class="niva-card">
+    <div class="niva-card coming">
       <div class="niva-num">2</div>
-      <div class="niva-badge badge-coming">Së shpejti</div>
+      <div class="niva-badge badge-coming">Në zhvillim</div>
       <div class="niva-title">Fjalori bazë</div>
+      <div class="niva-coming-banner">⏳ Materialet nuk janë gati ende</div>
       <div class="niva-desc">Fjalët e para: ngjyrat, numrat, kafshët, familja.</div>
       <ul class="niva-items">
         <li>Kartela fjalori me figura</li><li>Lojëra fjalësh</li>
@@ -398,10 +427,11 @@
       </ul>
       <a href="#kontribuo" class="niva-link">Kontribuo →</a>
     </div>
-    <div class="niva-card">
+    <div class="niva-card coming">
       <div class="niva-num">3</div>
       <div class="niva-badge badge-coming">Planifikuar</div>
       <div class="niva-title">Fjalitë e para</div>
+      <div class="niva-coming-banner">⏳ Materialet nuk janë gati ende</div>
       <div class="niva-desc">Ndërtimi i fjalive të thjeshta. Dialogë dhe histori të shkurtra.</div>
       <ul class="niva-items">
         <li>Histori të shkurtra</li><li>Dialogë për role-play</li>
@@ -431,8 +461,8 @@
   <p class="section-lead">Materialet funksionojnë në çdo kontekst — klasë, shtëpi, apo grup mësimor.</p>
   <div class="how-steps">
     <div class="how-step"><div class="step-num">01</div><div class="step-icon">🗺️</div><div class="step-title">Gjej shkollën</div><div class="step-desc">Shiko hartën dhe gjej shkollën shqiptare më të afërt.</div></div>
-    <div class="how-step"><div class="step-num">02</div><div class="step-icon">📝</div><div class="step-title">Regjistro fëmijën</div><div class="step-desc">Plotësoni formularin e thjeshtë. Shkolla do ju kontaktojë brenda 2–3 ditësh.</div></div>
-    <div class="how-step"><div class="step-num">03</div><div class="step-icon">🎓</div><div class="step-title">Mëson në klasë</div><div class="step-desc">Çdo material vjen me udhëzues për mësuesin për 20–30 minuta mësim.</div></div>
+    <div class="how-step"><div class="step-num">02</div><div class="step-icon">📝</div><div class="step-title">Regjistro fëmijën</div><div class="step-desc">Plotësoni formularin e thjeshtë. Shkolla do ju kontaktojë brenda 2–3 ditësh.</div><div style="margin-top:1rem;display:inline-block;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.75rem;background:rgba(212,168,71,0.1);color:var(--gold);border:1px solid rgba(212,168,71,0.3);">⏳ Së shpejti</div><div style="margin-top:1rem;display:inline-block;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.75rem;background:rgba(212,168,71,0.1);color:var(--gold);border:1px solid rgba(212,168,71,0.3);">⏳ Së shpejti</div></div>
+    <div class="how-step"><div class="step-num">03</div><div class="step-icon">🎓</div><div class="step-title">Mëson në klasë</div><div class="step-desc">Çdo material vjen me udhëzues për mësuesin për 20–30 minuta mësim.</div><div style="margin-top:1rem;display:inline-block;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.75rem;background:rgba(212,168,71,0.1);color:var(--gold);border:1px solid rgba(212,168,71,0.3);">⏳ Së shpejti</div><div style="margin-top:1rem;display:inline-block;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.75rem;background:rgba(212,168,71,0.1);color:var(--gold);border:1px solid rgba(212,168,71,0.3);">⏳ Së shpejti</div></div>
     <div class="how-step"><div class="step-num">04</div><div class="step-icon">🏠</div><div class="step-title">Vazhdon në shtëpi</div><div class="step-desc">Udhëzimet për prindërit e bëjnë të lehtë vazhdimin jashtë klasës.</div></div>
   </div>
 </section>
@@ -477,13 +507,13 @@
       <div class="dl-type">PDF · Printim</div>
       <div class="dl-title">Flashkarta – Alfabeti i plotë</div>
       <div class="dl-desc">36 flashkarta me shkronjat e mëdha dhe të vogla për klasë ose shtëpi.</div>
-      <a href="pdf/flashkarta-alfabeti.pdf" download class="dl-btn">Shkarko PDF <span>↓</span></a>
+      <div class="dl-badge-coming">Së shpejti</div>
     </div>
     <div class="download-card">
       <div class="dl-type">PDF · Mësues</div>
       <div class="dl-title">Udhëzues mësuesi – A & B</div>
       <div class="dl-desc">Plan i detajuar mësimor, aktivitete dhe këshilla për kontekstin e diasporës.</div>
-      <a href="pdf/udh-mesues-ab.pdf" download class="dl-btn">Shkarko PDF <span>↓</span></a>
+      <div class="dl-badge-coming">Së shpejti</div>
     </div>
     <div class="download-card">
       <div class="dl-type">Poster · Printim</div>
@@ -495,7 +525,7 @@
       <div class="dl-type" style="color:var(--gold)">Paketa e plotë</div>
       <div class="dl-title" style="color:var(--white)">Të gjitha materialet</div>
       <div class="dl-desc" style="color:rgba(255,255,255,0.45)">Gjithçka në një ZIP: fletë pune A & B, flashkarta, udhëzues dhe klipe audio.</div>
-      <a href="pdf/paketa-e-plote.zip" download class="dl-btn" style="background:var(--red)">Shkarko gjithçka (ZIP) <span>↓</span></a>
+      <div class="dl-badge-coming">Së shpejti</div>
     </div>
   </div>
 </section>
