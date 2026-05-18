@@ -375,6 +375,8 @@
     border: 1.5px solid var(--border);
     border-radius: 2px;
     margin-bottom: 3rem;
+    position: relative;
+    z-index: 1;
   }
 
   .school-cards-grid {
@@ -459,7 +461,7 @@
   /* SIGNUP MODAL */
   .modal-overlay {
     display: none;
-    position: fixed; inset: 0; z-index: 200;
+    position: fixed; inset: 0; z-index: 10000;
     background: rgba(0,0,0,0.6);
     align-items: center; justify-content: center;
     padding: 2rem;
@@ -611,6 +613,132 @@
   .popup-enroll-btn:hover { background: #A5281D; }
   .leaflet-popup-content-wrapper { border-radius: 4px !important; padding: 0 !important; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important; }
   .leaflet-popup-content { margin: 14px 20px 16px !important; }
+
+
+  /* ── OM OSS + TIDSLINJE ── */
+  .omos-section {
+    padding: 7rem 5rem;
+    background: var(--navy);
+    color: var(--white);
+    overflow: hidden;
+  }
+  .omos-section .section-tag { color: var(--gold); }
+  .omos-section .section-tag::before { background: var(--gold); }
+  .omos-section .section-title { color: var(--white); }
+  .omos-section .section-lead { color: rgba(255,255,255,0.55); max-width: 520px; }
+
+  .omos-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; margin-bottom: 5rem; align-items: start;
+  }
+  .omos-mission {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 2.5rem;
+  }
+  .omos-mission-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--gold); margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .omos-mission-text {
+    font-size: 0.92rem; color: rgba(255,255,255,0.6);
+    line-height: 1.75; margin-bottom: 1.75rem;
+  }
+  .omos-values {
+    display: flex; flex-direction: column; gap: 0.65rem;
+  }
+  .omos-value {
+    font-size: 0.88rem; color: rgba(255,255,255,0.7);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline-line {
+    position: absolute;
+    left: 7px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      var(--gold) 0%,
+      var(--gold) 50%,
+      rgba(255,255,255,0.15) 50%,
+      rgba(255,255,255,0.15) 100%
+    );
+  }
+  .timeline-item {
+    position: relative;
+    padding: 0 0 3.5rem 3rem;
+    display: flex; flex-direction: column;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-dot {
+    position: absolute;
+    left: -1.65rem; top: 4px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid;
+    flex-shrink: 0;
+  }
+  .completed-dot {
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(212,168,71,0.2);
+  }
+  .active-dot {
+    background: var(--red);
+    border-color: var(--red);
+    box-shadow: 0 0 0 6px rgba(192,57,43,0.25);
+    animation: pulseDot 2s ease-in-out infinite;
+  }
+  .upcoming-dot {
+    background: transparent;
+    border-color: rgba(255,255,255,0.25);
+  }
+  @keyframes pulseDot {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(192,57,43,0.25); }
+    50% { box-shadow: 0 0 0 8px rgba(192,57,43,0.1); }
+  }
+  .timeline-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; color: var(--gold);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .timeline-item.upcoming .timeline-year { color: rgba(255,255,255,0.3); }
+  .timeline-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+  .timeline-item.upcoming .timeline-title { color: rgba(255,255,255,0.45); }
+  .timeline-desc {
+    font-size: 0.88rem; color: rgba(255,255,255,0.5);
+    line-height: 1.7; max-width: 560px;
+    margin-bottom: 0.75rem;
+  }
+  .timeline-item.upcoming .timeline-desc { color: rgba(255,255,255,0.3); }
+  .timeline-badge {
+    display: inline-block;
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.25rem 0.75rem; border-radius: 2px;
+    align-self: flex-start;
+  }
+  .active-badge { background: var(--red); color: var(--white); }
+  .upcoming-badge { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+
+  @media (max-width: 900px) {
+    .omos-section { padding: 4rem 1.5rem; }
+    .omos-header { grid-template-columns: 1fr; gap: 2.5rem; }
+    .timeline { padding-left: 1.5rem; }
+  }
 
   /* ANIMATIONS */
   @keyframes slideUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
@@ -927,6 +1055,81 @@
   </div>
 </section>
 
+
+<!-- OM OSS + TIDSLINJE -->
+<section class="omos-section" id="omos">
+  <div class="omos-header">
+    <div>
+      <div class="section-tag">Rreth nesh</div>
+      <h2 class="section-title">Historia jonë,<br>rrugëtimi ynë</h2>
+      <p class="section-lead">Shkollashqiptare.com lindi nga një nevojë e thjeshtë: fëmijët shqiptarë në diasporë meritojnë materiale cilësore, falas dhe të arritshme për të mësuar gjuhën e nënës.</p>
+    </div>
+    <div class="omos-mission">
+      <div class="omos-mission-title">Misioni ynë</div>
+      <p class="omos-mission-text">Të ruajmë gjuhën dhe identitetin shqiptar tek brezat e rinj të diasporës, duke ofruar materiale falas dhe bashkëkohore për çdo fëmijë shqiptar, kudo në botë.</p>
+      <div class="omos-values">
+        <div class="omos-value"><span>🌍</span> Global, por me zemër lokale</div>
+        <div class="omos-value"><span>📚</span> Cilësi pedagogjike</div>
+        <div class="omos-value"><span>🤝</span> Ndërtuar nga komuniteti</div>
+        <div class="omos-value"><span>🆓</span> Gjithmonë falas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-line"></div>
+
+    <div class="timeline-item completed">
+      <div class="timeline-dot completed-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-year">2024</div>
+        <div class="timeline-title">Fillimi</div>
+        <div class="timeline-desc">Ideja lind në Kristiansand. Materialet e para për alfabetin shqip — Niveli 1 — fillojnë të krijohen me mbështetjen e mësuesve vullnetarë.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item completed">
+      <div class="timeline-dot completed-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-year">2025</div>
+        <div class="timeline-title">Platforma hapet</div>
+        <div class="timeline-desc">shkollashqiptare.com lansohet. Materialet e para falas bëhen të disponueshme për shkollat shqipe në Norvegji. Harta interaktive e shkollave ndërtohet.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item active">
+      <div class="timeline-dot active-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-year">2025–2026</div>
+        <div class="timeline-title">Niveli 1 i plotë → Niveli 2</div>
+        <div class="timeline-desc">Plotësojmë të gjitha 36 shkronjat me fletë pune, audio dhe flashkarta. Fillojmë Nivelin 2: fjalori bazë me ngjyra, numra, kafshë dhe familje.</div>
+        <div class="timeline-badge active-badge">Tani jemi këtu</div>
+      </div>
+    </div>
+
+    <div class="timeline-item upcoming">
+      <div class="timeline-dot upcoming-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-year">2026</div>
+        <div class="timeline-title">Niveli 2 + Zgjerimi global</div>
+        <div class="timeline-desc">Fjalori bazë i plotë. Zgjerojmë rrjetin e shkollave jashtë Norvegjisë — Gjermani, Suedi, Britani, Australi dhe SHBA.</div>
+        <div class="timeline-badge upcoming-badge">Së shpejti</div>
+      </div>
+    </div>
+
+    <div class="timeline-item upcoming">
+      <div class="timeline-dot upcoming-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-year">2027</div>
+        <div class="timeline-title">Niveli 3 + Platforma dixhitale</div>
+        <div class="timeline-desc">Fjalitë e para, historitë e shkurtra dhe dialogët. Platformë interaktive online me ndjekje të progresit dhe aktivitete dixhitale për fëmijët.</div>
+        <div class="timeline-badge upcoming-badge">Planifikuar</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer id="kontakt">
   <div>
@@ -949,7 +1152,8 @@
   <div>
     <div class="footer-col-title">Komunitet</div>
     <ul class="footer-links">
-      <li><a href="#kontribuo">Kontribuo</a></li>
+      <li><a href="#omos">Rreth nesh</a></li>
+    <li><a href="#kontribuo">Kontribuo</a></li>
       <li><a href="#shkollat">Regjistro fëmijën</a></li>
       <li><a href="#">Manuali i kontribuesit</a></li>
       <li><a href="mailto:kontakt@shkollashqiptare.com">Na kontaktoni</a></li>
