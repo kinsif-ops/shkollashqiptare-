@@ -230,6 +230,10 @@
   .active-dot { background: var(--red); border-color: var(--red); box-shadow: 0 0 0 6px rgba(192,57,43,0.25); animation: pulseDot 2s ease-in-out infinite; }
   .upcoming-dot { background: transparent; border-color: rgba(255,255,255,0.25); }
   @keyframes pulseDot { 0%, 100% { box-shadow: 0 0 0 4px rgba(192,57,43,0.25); } 50% { box-shadow: 0 0 0 8px rgba(192,57,43,0.1); } }
+  .timeline-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.6rem;
+  }
   .timeline-year { font-family: "DM Mono", monospace; font-size: 0.72rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.4rem; }
   .timeline-item.upcoming .timeline-year { color: rgba(255,255,255,0.3); }
   .timeline-title { font-family: "Playfair Display", serif; font-size: 1.3rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; line-height: 1.2; }
@@ -539,49 +543,82 @@
   </div>
   <div class="timeline">
     <div class="timeline-line"></div>
+
     <div class="timeline-item completed">
       <div class="timeline-dot completed-dot"></div>
+      <div class="timeline-icon">💡</div>
       <div class="timeline-content">
-        <div class="timeline-year">2024</div>
-        <div class="timeline-title">Fillimi</div>
-        <div class="timeline-desc">Ideja lind në Kristiansand. Materialet e para për alfabetin shqip fillojnë të krijohen.</div>
+        <div class="timeline-year">Shkurt 2025</div>
+        <div class="timeline-title">Ideja lind</div>
+        <div class="timeline-desc">Fisnik Rashica koncepton platformën falas për fëmijët shqiptarë në diasporë. Një nevojë e thjeshtë bëhet mision.</div>
       </div>
     </div>
+
     <div class="timeline-item completed">
       <div class="timeline-dot completed-dot"></div>
+      <div class="timeline-icon">🚀</div>
       <div class="timeline-content">
-        <div class="timeline-year">2025</div>
-        <div class="timeline-title">Platforma hapet</div>
-        <div class="timeline-desc">shkollashqiptare.com lansohet me materialet e para falas dhe hartën interaktive.</div>
+        <div class="timeline-year">Prill 2026</div>
+        <div class="timeline-title">Platforma hapet për botën</div>
+        <div class="timeline-desc">shkollashqiptare.com lansohet. Harta interaktive e shkollave dhe materialet e para bëhen të disponueshme falas për të gjithë.</div>
       </div>
     </div>
+
     <div class="timeline-item active">
       <div class="timeline-dot active-dot"></div>
+      <div class="timeline-icon">📚</div>
       <div class="timeline-content">
-        <div class="timeline-year">2025–2026</div>
-        <div class="timeline-title">Niveli 1 i plotë → Niveli 2</div>
-        <div class="timeline-desc">Plotësojmë të gjitha 36 shkronjat dhe fillojmë Nivelin 2: fjalori bazë.</div>
+        <div class="timeline-year">Maj 2026</div>
+        <div class="timeline-title">Shkronjat e para — A deri J</div>
+        <div class="timeline-desc">Fletët e punës për shkronjat A–J ngarkohen në platformë. Hapi i parë i madh drejt alfabetit të plotë.</div>
         <div class="timeline-badge active-badge">Tani jemi këtu</div>
       </div>
     </div>
+
     <div class="timeline-item upcoming">
       <div class="timeline-dot upcoming-dot"></div>
+      <div class="timeline-icon">✏️</div>
       <div class="timeline-content">
-        <div class="timeline-year">2026</div>
-        <div class="timeline-title">Niveli 2 + Zgjerimi global</div>
-        <div class="timeline-desc">Fjalori bazë i plotë. Zgjerojmë rrjetin jashtë Norvegjisë — Gjermani, Suedi, Britani, Australi.</div>
+        <div class="timeline-year">Maj 2026</div>
+        <div class="timeline-title">Alfabeti i plotë — K deri Zh</div>
+        <div class="timeline-desc">Të 36 shkronjat e gjuhës shqipe të disponueshme si fletë pune. Niveli 1 përfundon.</div>
         <div class="timeline-badge upcoming-badge">Së shpejti</div>
       </div>
     </div>
+
     <div class="timeline-item upcoming">
       <div class="timeline-dot upcoming-dot"></div>
+      <div class="timeline-icon">🎨</div>
       <div class="timeline-content">
-        <div class="timeline-year">2027</div>
-        <div class="timeline-title">Niveli 3 + Platforma dixhitale</div>
-        <div class="timeline-desc">Fjalitë e para dhe platformë interaktive online me ndjekje të progresit.</div>
+        <div class="timeline-year">2026</div>
+        <div class="timeline-title">Niveli 2 — Fjalori bazë</div>
+        <div class="timeline-desc">Ngjyrat, numrat, kafshët dhe familja. Fëmijët ndërtojnë fjalët e para shqipe me ilustrime dhe aktivitete.</div>
         <div class="timeline-badge upcoming-badge">Planifikuar</div>
       </div>
     </div>
+
+    <div class="timeline-item upcoming">
+      <div class="timeline-dot upcoming-dot"></div>
+      <div class="timeline-icon">💻</div>
+      <div class="timeline-content">
+        <div class="timeline-year">2027</div>
+        <div class="timeline-title">Niveli 3 + Platforma dixhitale</div>
+        <div class="timeline-desc">Fjalitë e para dhe historitë e shkurtra. Platformë interaktive online me ndjekje të progresit për fëmijë dhe prindër.</div>
+        <div class="timeline-badge upcoming-badge">Planifikuar</div>
+      </div>
+    </div>
+
+    <div class="timeline-item upcoming">
+      <div class="timeline-dot upcoming-dot"></div>
+      <div class="timeline-icon">🌍</div>
+      <div class="timeline-content">
+        <div class="timeline-year">2028</div>
+        <div class="timeline-title">100 shkolla në 20 vende</div>
+        <div class="timeline-desc">Vizioni ynë: një rrjet global i shkollave shqipe në diasporë, ku çdo fëmijë shqiptar — kudo në botë — ka akses në gjuhën e nënës.</div>
+        <div class="timeline-badge upcoming-badge">Vizioni ynë</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
