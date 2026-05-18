@@ -1526,9 +1526,124 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // ── SCHOOL CARDS ──
   const cardContainer = document.getElementById('schoolCards');
-  schools.forEach(s => {
+  schools.forEach((s, idx) => {
+    const collapsed = idx >= 6 ? 'collapsed' : '';
     cardContainer.innerHTML += `
-      <div class="school-card" data-id="${s.id}" onclick="scrollToSchool(${s.lat}, ${s.lng})">
+      <div class="school-card ${collapsed}" data-id="${s.id}" onclick="scrollToSchool(${s.lat}, ${s.lng})">
+        <div class="school-card-header">
+          <div>
+            <div class="school-card-name">${s.name}</div>
+            <div class="school-card-city">${s.city}, ${s.country}</div>
+          </div>
+          <div class="school-dot"></div>
+        </div>
+        <div class="school-card-body">
+          <div class="school-info-row">
+            <span class="school-info-label">Nxënës</span>
+            <span class="school-info-val">${s.elever} fëmijë</span>
+          </div>
+          <div class="school-info-row">
+            <span class="school-info-label">Mësues</span>
+            <span class="school-info-val">${s.laerer}</span>
+          </div>
+          <div class="school-info-row">
+            <span class="school-info-label">Orari</span>
+            <span class="school-info-val">${s.ores}</span>
+          </div>
+          <div class="school-info-row">
+            <span class="school-info-label">Grunnlagt</span>
+            <span class="school-info-val">${s.grunnlagt}</span>
+          </div>
+          <div class="school-info-row">
+            <span class="school-info-label">Kontakt</span>
+            <a href="mailto:${s.kontakt}" style="color:var(--red);font-size:0.82rem;" onclick="event.stopPropagation()">${s.kontakt}</a>
+          </div>
+        </div>
+        <div class="school-card-footer">
+          <button class="school-btn-enroll" onclick="event.stopPropagation(); openModal('${s.id}')">Regjistro fëmijën</button>
+          <button class="school-btn-map" onclick="event.stopPropagation(); scrollToSchool(${s.lat}, ${s.lng})">Shiko hartën</button>
+        </div>
+      </div>`;
+  });
+
+
+  // ── POPULATE COUNTRY FILTER ──
+  const countries = [...new Set(schools.map(s => s.country))].sort();
+  const countrySelect = document.getElementById('countryFilter');
+  countries.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    countrySelect.appendChild(opt);
+  });
+
+  // ── FILTER FUNCTION ──
+  function filterSchools() {
+    const q = document.getElementById('schoolSearch').value.toLowerCase().trim();
+    const country = document.getElementById('countryFilter').value;
+    const isFiltering = q.length > 0 || country.length > 0;
+    const cards = document.querySelectorAll('.school-card[data-id]');
+    let visible = 0;
+
+    cards.forEach((card, idx) => {
+      const id = card.dataset.id;
+      const school = schools.find(s => s.id === id);
+      const matchText = !q || school.name.toLowerCase().includes(q)
+        || school.city.toLowerCase().includes(q)
+        || school.country.toLowerCase().includes(q);
+      const matchCountry = !country || school.country === country;
+      const matches = matchText && matchCountry;
+
+      if (matches) {
+        card.classList.remove('hidden');
+        // When actively filtering: show all matches without collapse
+        if (isFiltering) {
+          card.classList.remove('collapsed');
+        } else {
+          // Reset to default: first 6 visible
+          if (idx >= 6) card.classList.add('collapsed');
+          else card.classList.remove('collapsed');
+        }
+        visible++;
+      } else {
+        card.classList.add('hidden');
+        card.classList.remove('collapsed');
+      }
+    });
+
+    // Update count
+    const total = schools.length;
+    if (isFiltering) {
+      document.getElementById('schoolsCount').textContent =
+        visible === 0 ? 'Asnjë shkollë' :
+        visible === 1 ? '1 shkollë e gjetur' :
+        `${visible} shkolla të gjetura`;
+    } else {
+      document.getElementById('schoolsCount').textContent =
+        `${total} shkolla në ${countries.length} vende`;
+    }
+
+    // No results message
+    let noRes = document.querySelector('.no-results');
+    if (visible === 0) {
+      if (!noRes) {
+        noRes = document.createElement('div');
+        noRes.className = 'no-results';
+        noRes.textContent = 'Nuk u gjet asnjë shkollë. Provoni një kërkim tjetër.';
+        document.getElementById('schoolCards').appendChild(noRes);
+      }
+    } else if (noRes) {
+      noRes.remove();
+    }
+
+    renderShowMore();
+  }
+
+    // ── SCHOOL CARDS ──
+  const cardContainer = document.getElementById('schoolCards');
+  schools.forEach((s, idx) => {
+    const collapsed = idx >= 6 ? 'collapsed' : '';
+    cardContainer.innerHTML += `
+      <div class="school-card ${collapsed}" data-id="${s.id}" onclick="scrollToSchool(${s.lat}, ${s.lng})">
         <div class="school-card-header">
           <div>
             <div class="school-card-name">${s.name}</div>
@@ -1600,6 +1715,13 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('schoolsCount').textContent =
       visible === total ? `${total} shkolla në ${countries.length} vende`
       : `${visible} nga ${total} shkolla`;
+    // When filtering, show all matching results (remove collapsed)
+    document.querySelectorAll('.school-card[data-id]').forEach(card => {
+      if (!card.classList.contains('hidden')) {
+        card.classList.remove('collapsed');
+      }
+    });
+
     // No results message
     let noRes = document.querySelector('.no-results');
     if (visible === 0) {
@@ -1612,7 +1734,55 @@ document.addEventListener("DOMContentLoaded", function() {
     } else if (noRes) {
       noRes.remove();
     }
+
+    // Re-render show more button
+    renderShowMore();
   }
+
+  // Show more / show less
+  function renderShowMore() {
+    const existing = document.querySelector('.show-more-wrap');
+    if (existing) existing.remove();
+
+    const allCards = Array.from(document.querySelectorAll('.school-card[data-id]'))
+      .filter(c => !c.classList.contains('hidden'));
+    const collapsed = allCards.filter(c => c.classList.contains('collapsed'));
+    const visible = allCards.filter(c => !c.classList.contains('collapsed'));
+
+    if (allCards.length <= 6) return; // no button needed
+
+    const wrap = document.createElement('div');
+    wrap.className = 'show-more-wrap';
+
+    if (collapsed.length > 0) {
+      wrap.innerHTML = `
+        <button class="show-more-btn" onclick="showAll()">
+          Shfaq të gjitha ${allCards.length} shkollat ↓
+        </button>
+        <span class="schools-shown-label">Duke shfaqur ${visible.length} nga ${allCards.length} shkolla</span>
+      `;
+    } else {
+      wrap.innerHTML = `
+        <button class="show-more-btn" onclick="showLess()">Shfaq më pak ↑</button>
+        <span class="schools-shown-label">Duke shfaqur të gjitha ${allCards.length} shkollat</span>
+      `;
+    }
+    cardContainer.appendChild(wrap);
+  }
+
+  function showAll() {
+    document.querySelectorAll('.school-card.collapsed').forEach(c => c.classList.remove('collapsed'));
+    renderShowMore();
+  }
+
+  function showLess() {
+    const cards = document.querySelectorAll('.school-card[data-id]');
+    cards.forEach((c, i) => { if (i >= 6) c.classList.add('collapsed'); });
+    renderShowMore();
+    document.getElementById('shkollat').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  renderShowMore();
 
   function scrollToSchool(lat, lng) {
     document.getElementById('schoolMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
