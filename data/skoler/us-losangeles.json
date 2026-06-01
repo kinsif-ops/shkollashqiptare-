@@ -1,0 +1,14 @@
+{
+  "id": "us-losangeles",
+  "name": "Shkolla Shqipe Los Angeles",
+  "city": "Los Angeles",
+  "country": "SHBA",
+  "lat": 34.0522,
+  "lng": -118.2437,
+  "elever": 35,
+  "laerer": "4 mësues vullnetarë",
+  "grunnlagt": 2017,
+  "kontakt": "kontakt@shkolla-losangeles.us",
+  "ores": "E shtunë 10:00–12:00",
+  "adresse": "Albanian Blvd 12, Los Angeles"
+}

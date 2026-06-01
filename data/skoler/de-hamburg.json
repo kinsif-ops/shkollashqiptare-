@@ -1,0 +1,14 @@
+{
+  "id": "de-hamburg",
+  "name": "Shkolla Shqipe Hamburg",
+  "city": "Hamburg",
+  "country": "Gjermania",
+  "lat": 53.5511,
+  "lng": 9.9937,
+  "elever": 31,
+  "laerer": "3 mësues vullnetarë",
+  "grunnlagt": 2018,
+  "kontakt": "kontakt@shkolla-hamburg.de",
+  "ores": "E shtunë 09:00–11:00",
+  "adresse": "Hamburgerstrasse 7, Hamburg"
+}
