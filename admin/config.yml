@@ -1,0 +1,52 @@
+backend:
+  name: github
+  repo: kinsif-ops/shkollashqiptare-
+  branch: main
+
+media_folder: "pdf"
+public_folder: "/pdf"
+
+locale: 'no'
+
+collections:
+  - name: "skoler"
+    label: "Skoler"
+    label_singular: "Skole"
+    folder: "data/skoler"
+    create: true
+    delete: true
+    identifier_field: "id"
+    fields:
+      - { label: "ID (unik, ingen mellomrom)", name: "id", widget: "string" }
+      - { label: "Skolenavn", name: "name", widget: "string" }
+      - { label: "By", name: "city", widget: "string" }
+      - { label: "Land", name: "country", widget: "string" }
+      - { label: "Breddegrad (latitude)", name: "lat", widget: "number", value_type: "float" }
+      - { label: "Lengdegrad (longitude)", name: "lng", widget: "number", value_type: "float" }
+      - { label: "Antall elever", name: "elever", widget: "number" }
+      - { label: "Lærere", name: "laerer", widget: "string" }
+      - { label: "Grunnlagt (år)", name: "grunnlagt", widget: "number" }
+      - { label: "Kontakt e-post", name: "kontakt", widget: "string" }
+      - { label: "Undervisningstid", name: "ores", widget: "string" }
+      - { label: "Adresse", name: "adresse", widget: "string" }
+
+  - name: "materialer"
+    label: "Materialer (PDF)"
+    label_singular: "Materiale"
+    folder: "data/materialer"
+    create: true
+    delete: true
+    fields:
+      - { label: "Bokstav", name: "bokstav", widget: "string" }
+      - { label: "Tittel", name: "tittel", widget: "string" }
+      - { label: "Beskrivelse", name: "beskrivelse", widget: "text" }
+      - { label: "Type", name: "type", widget: "select", options: ["Arbeidshefte", "Flashkort", "Lærerveiledning", "Poster", "Pakke"] }
+      - label: "PDF-fil"
+        name: "fil"
+        widget: "file"
+        media_folder: "/pdf"
+        public_folder: "/pdf"
+        media_library:
+          config:
+            multiple: false
+      - { label: "Tilgjengelig nå", name: "tilgjengelig", widget: "boolean", default: false }
