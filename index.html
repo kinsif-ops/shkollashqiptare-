@@ -730,11 +730,10 @@ document.addEventListener("DOMContentLoaded", function() {
   async function loadSchools() {
     // Fetch list of school JSON files from data/skoler/
     const schoolIds = [
-      "no-kristiansand","no-oslo","no-bergen","se-stockholm",
-      "de-berlin","de-munich","ch-zurich","gb-london","be-brussels",
-      "nl-amsterdam","it-rome","fr-paris","us-newyork","us-chicago",
-      "ca-toronto","au-sydney","au-melbourne","tr-istanbul",
-      "at-vienna","dk-copenhagen","fi-helsinki"
+      "no-kristiansand",
+      "au-brisbane",
+      "de-hamburg",
+      "us-losangeles"
     ];
     const results = await Promise.all(
       schoolIds.map(id =>
