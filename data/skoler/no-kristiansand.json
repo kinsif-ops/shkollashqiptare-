@@ -1,0 +1,14 @@
+{
+  "id": "no-kristiansand",
+  "name": "Shkolla Shqipe Kristiansand",
+  "city": "Kristiansand",
+  "country": "Norvegjia",
+  "lat": 58.1467,
+  "lng": 7.9956,
+  "elever": 24,
+  "laerer": "3 mësues vullnetarë",
+  "grunnlagt": 2019,
+  "kontakt": "kontakt@shkolla-kristiansand.no",
+  "ores": "E shtunë 10:00–12:00",
+  "adresse": "Eksempelgata 1, Kristiansand"
+}
