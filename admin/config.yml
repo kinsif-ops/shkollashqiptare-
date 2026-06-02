@@ -2,6 +2,7 @@ backend:
   name: github
   repo: kinsif-ops/shkollashqiptare-
   branch: main
+  site_domain: shkollashqiptare.com
 
 media_folder: "pdf"
 public_folder: "/pdf"
@@ -16,6 +17,8 @@ collections:
     create: true
     delete: true
     identifier_field: "id"
+    extension: "json"
+    format: "json"
     fields:
       - { label: "ID (unik, ingen mellomrom)", name: "id", widget: "string" }
       - { label: "Skolenavn", name: "name", widget: "string" }
@@ -36,17 +39,11 @@ collections:
     folder: "data/materialer"
     create: true
     delete: true
+    extension: "json"
+    format: "json"
     fields:
       - { label: "Bokstav", name: "bokstav", widget: "string" }
       - { label: "Tittel", name: "tittel", widget: "string" }
       - { label: "Beskrivelse", name: "beskrivelse", widget: "text" }
       - { label: "Type", name: "type", widget: "select", options: ["Arbeidshefte", "Flashkort", "Lærerveiledning", "Poster", "Pakke"] }
-      - label: "PDF-fil"
-        name: "fil"
-        widget: "file"
-        media_folder: "/pdf"
-        public_folder: "/pdf"
-        media_library:
-          config:
-            multiple: false
       - { label: "Tilgjengelig nå", name: "tilgjengelig", widget: "boolean", default: false }
