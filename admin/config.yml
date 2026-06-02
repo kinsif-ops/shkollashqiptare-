@@ -2,7 +2,9 @@ backend:
   name: github
   repo: kinsif-ops/shkollashqiptare-
   branch: main
-  site_domain: shkollashqiptare.com
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+  site_id: 7a5097bb-ebde-41ac-aab1-a9918324f3ae
 
 media_folder: "pdf"
 public_folder: "/pdf"
