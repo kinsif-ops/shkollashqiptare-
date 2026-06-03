@@ -31,6 +31,43 @@ collections:
       - { label: "Undervisningstid", name: "ores", widget: "string" }
       - { label: "Adresse", name: "adresse", widget: "string" }
 
+  - name: "bokstaver"
+    label: "Bokstaver"
+    label_singular: "Bokstav"
+    folder: "data/bokstaver"
+    create: true
+    delete: true
+    identifier_field: "bokstav"
+    extension: "json"
+    format: "json"
+    fields:
+      - { label: "Bokstav", name: "bokstav", widget: "string", hint: "F.eks. A, B, Dh, Gj" }
+      - label: "Arbeidsark (PDF)"
+        name: "arbeidsark"
+        widget: "file"
+        required: false
+        media_folder: "/pdf"
+        public_folder: "/pdf"
+      - label: "Lærerveiledning (PDF)"
+        name: "laererveiledning"
+        widget: "file"
+        required: false
+        media_folder: "/pdf"
+        public_folder: "/pdf"
+      - label: "Foreldreark (PDF)"
+        name: "foreldreark"
+        widget: "file"
+        required: false
+        media_folder: "/pdf"
+        public_folder: "/pdf"
+      - label: "Lydfil (uttale)"
+        name: "lydfil"
+        widget: "file"
+        required: false
+        media_folder: "/audio"
+        public_folder: "/audio"
+      - { label: "Video-lenke (munnbevegelse)", name: "video", widget: "string", required: false, hint: "Lim inn YouTube-lenke eller annen video-URL" }
+
   - name: "materialer"
     label: "Materialer (PDF)"
     label_singular: "Materiale"
