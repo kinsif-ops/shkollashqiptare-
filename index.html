@@ -194,6 +194,36 @@
   .show-more-btn:hover { border-color: var(--navy); background: var(--cream); }
   .schools-shown-label { font-size: 0.78rem; color: var(--muted); font-family: "DM Mono", monospace; letter-spacing: 0.04em; }
 
+
+  /* LETTER MODAL DOWNLOADS */
+  .letter-dl-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem; margin-bottom: 0.75rem;
+    border: 1.5px solid var(--border); background: var(--cream);
+  }
+  .letter-dl-info { display: flex; align-items: center; gap: 0.85rem; }
+  .letter-dl-icon { font-size: 1.4rem; }
+  .letter-dl-label { font-size: 0.9rem; font-weight: 500; color: var(--navy); }
+  .letter-dl-sublabel { font-size: 0.75rem; color: var(--muted); }
+  .letter-dl-btn {
+    background: var(--navy); color: var(--white);
+    border: none; padding: 0.55rem 1.2rem;
+    font-family: "DM Sans", sans-serif; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .letter-dl-btn:hover { background: var(--red); }
+  .letter-dl-btn.video { background: var(--red); }
+  .letter-dl-btn.video:hover { background: #A5281D; }
+  .letter-dl-soon {
+    background: var(--border); color: var(--muted);
+    padding: 0.55rem 1.2rem; font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+  }
+
+  /* LETTER MODAL DOWNLOADS */
+
   /* MODAL */
   .modal-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 2rem; }
   .modal-overlay.open { display: flex; }
@@ -723,6 +753,20 @@
   </div>
 </div>
 
+<!-- LETTER MODAL -->
+<div class="modal-overlay" id="letterModalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeLetterModal()">✕</button>
+      <h2>Shkronja <span id="letterModalLetter" style="color:var(--gold)">A</span></h2>
+      <p>Materiale për mësues, prindër dhe fëmijë</p>
+    </div>
+    <div class="modal-body" id="letterModalBody">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -898,7 +942,68 @@ document.addEventListener("DOMContentLoaded", function() {
     var tile = document.createElement("div");
     tile.className = "letter-tile" + (item.d ? " digraph" : "");
     tile.innerHTML = '<div class="tile-letter">' + item.l + '</div><div class="tile-sub">' + (item.d ? "digraf" : "") + '</div>';
+    tile.style.cursor = "pointer";
+    tile.onclick = function() { openLetterModal(item.l); };
     grid.appendChild(tile);
+  });
+
+  // ── LETTER MODAL ──
+  window.openLetterModal = function(letter) {
+    document.getElementById("letterModalLetter").textContent = letter;
+    var body = document.getElementById("letterModalBody");
+    body.innerHTML = '<p style="text-align:center;color:var(--muted);padding:2rem;">Duke ngarkuar...</p>';
+    document.getElementById("letterModalOverlay").classList.add("open");
+    document.body.style.overflow = "hidden";
+
+    var filename = letter.toLowerCase()
+      .replace("ç","c").replace("ë","e")
+      .replace("dh","dh").replace("gj","gj").replace("ll","ll")
+      .replace("nj","nj").replace("rr","rr").replace("sh","sh")
+      .replace("th","th").replace("xh","xh").replace("zh","zh");
+
+    fetch("data/bokstaver/" + filename + ".json")
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(data) { renderLetterModal(data, letter); })
+      .catch(function() { renderLetterModal(null, letter); });
+  };
+
+  function renderLetterModal(data, letter) {
+    var body = document.getElementById("letterModalBody");
+    var items = [
+      { key: "arbeidsark",       icon: "📄", label: "Fletë pune",          sub: "Për fëmijën",  btn: "Shkarko PDF" },
+      { key: "laererveiledning", icon: "👩‍🏫", label: "Udhëzues mësuesi",    sub: "Për mësuesin", btn: "Shkarko PDF" },
+      { key: "foreldreark",      icon: "👪", label: "Udhëzues prindi",      sub: "Për prindin",  btn: "Shkarko PDF" },
+      { key: "lydfil",           icon: "🔊", label: "Shqiptimi",            sub: "Dëgjo zërin",  btn: "Dëgjo" },
+      { key: "video",            icon: "👄", label: "Video – lëvizja e gojës", sub: "Shiko videon", btn: "Shiko", video: true }
+    ];
+    var html = "";
+    items.forEach(function(it) {
+      var val = data && data[it.key] ? data[it.key] : "";
+      html += '<div class="letter-dl-row">';
+      html += '<div class="letter-dl-info"><span class="letter-dl-icon">' + it.icon + '</span>';
+      html += '<div><div class="letter-dl-label">' + it.label + '</div><div class="letter-dl-sublabel">' + it.sub + '</div></div></div>';
+      if (val) {
+        if (it.video) {
+          html += '<a class="letter-dl-btn video" href="' + val + '" target="_blank" rel="noopener">' + it.btn + ' →</a>';
+        } else if (it.key === "lydfil") {
+          html += '<button class="letter-dl-btn" onclick="new Audio(\'' + val + '\').play()">' + it.btn + ' ▶</button>';
+        } else {
+          html += '<a class="letter-dl-btn" href="' + val + '" download>' + it.btn + ' ↓</a>';
+        }
+      } else {
+        html += '<span class="letter-dl-soon">Së shpejti</span>';
+      }
+      html += '</div>';
+    });
+    body.innerHTML = html;
+  }
+
+  window.closeLetterModal = function() {
+    document.getElementById("letterModalOverlay").classList.remove("open");
+    document.body.style.overflow = "";
+  };
+  document.getElementById("letterModalOverlay").addEventListener("click", function(e) {
+    if (e.target === this) closeLetterModal();
   });
 
   // ── AUDIO ──
